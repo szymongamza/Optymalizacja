@@ -5,9 +5,6 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix), double x0, double d, doub
 	try
 	{
 		double* p = new double[2]{ 0,0 };
-		int i = 0;
-		double xi1, xi2, xi3;
-		double y2, y3;
 		solution S0(x0);
 		solution S1(x0 + d);
 
@@ -15,56 +12,44 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix), double x0, double d, doub
 		S1.fit_fun(ff, ud1, ud2);
 
 		if (S0.y == S1.y) {
-			p[0] = S0.x();
-			p[1] = S1.x();
-			cout << p[0] << endl;
-			cout << p[1] << endl;
+			p[0] = x0;
+			p[1] = x0+d;
 			return p;
 		}
 		if (S1.y > S0.y) {
-			d = -d;
+			d *= -1;
 			S1.x = S0.x + d;
 			S1.fit_fun(ff, ud1, ud2);
 			if (S1.y >= S0.y) {
-				p[0] = S1.x();
-				p[1] = S0.x() - d;
-				cout << p[0] << endl;
-				cout << p[1] << endl;
+				p[0] = x0+d;
+				p[1] = x0 - d;
 				return p;
 			}
 		}
-		do {
-			i++;
-			xi1 = x0 + pow(alpha, i-1) * d;
-			xi2 = x0 + pow(alpha, i) * d;
-			xi3 = x0 + pow(alpha, i + 1) * d;
+		solution S2;
+		int i = 1;
+		do{
+			S2.x = d * pow(alpha, i) + x0;
+			S2.fit_fun(ff,ud1,ud2);
 
-			solution SX2(xi2);
-			solution SX3(xi3);
-
-			SX2.fit_fun(ff, ud1, ud2);
-			SX3.fit_fun(ff, ud1, ud2);
-
-			y2 = SX2.y();
-			y3 = SX3.y();
-
-			cout << i << endl;
-
-		} while ( y2 <= y3);
+			if (solution::f_calls > Nmax)
+				throw "exception";
+			if (S2.y >= S1.y)
+				break;
+			S0 = S1;
+			S1 = S2;
+			++i;
+		} while (true);
 
 		if (d > 0) {
-			p[0] = xi1;
-			p[1] = xi3;
-			cout << p[0] << endl;
-			cout << "TU1" << endl;
-			cout << p[1] << endl;
-			return p;
+			p[0] = S0.x(0,0);
+			p[1] = S2.x(0.0);
 		}
-		p[0] = xi3;
-		p[1] = xi1;
-		cout << "TU2" << endl;
-		cout << p[0] << endl;
-		cout << p[1] << endl;
+		else {
+			p[0] = S2.x(0,0);
+			p[1] = S0.x(0,0);
+		}
+
 		return p;
 	}
 	catch (string ex_info)

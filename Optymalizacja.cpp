@@ -12,7 +12,38 @@ int main()
 {
 	try
 	{
-		expansion(ff, 100, 1, 1.5, 1000);
+		cout << "1:" << endl;
+		auto y = expansion(ff, 100, 1, 1.1, 1000);
+		cout << y[0] << endl;
+		cout << y[1] << endl;	
+		
+		cout << "2:" << endl;
+		 y = expansion(ff, 100, 1, 1.5, 1000);
+		cout << y[0] << endl;
+		cout << y[1] << endl;
+			
+		cout << "3:" << endl;
+		 y = expansion(ff, -100, 1, 1.5, 1000);
+		cout << y[0] << endl;
+		cout << y[1] << endl;
+				
+		cout << "4:" << endl;
+		 y = expansion(ff, -100, 1, 2.5, 1000);
+		cout << y[0] << endl;
+		cout << y[1] << endl;
+
+		cout << "5:" << endl;
+		 y = expansion(ff, -10, 1, 2.5, 1000);
+		cout << y[0] << endl;
+		cout << y[1] << endl;
+		
+		cout << "6:" << endl;
+		 y = expansion(ff, 10, 1, 2.5, 1000);
+		cout << y[0] << endl;
+		cout << y[1] << endl;
+		
+
+
 	}
 	catch (string EX_INFO)
 	{
