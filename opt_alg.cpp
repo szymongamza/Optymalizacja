@@ -62,10 +62,32 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 {
 	try
 	{
-		solution Xopt;
-		//Tu wpisz kod funkcji
+		double s = (b - a) / epsilon;
+		double k = 0;
+		while (true) {
+			if (fib_value(k) > s) {
+				break;
+			}
+			k++;
+		}
+		solution A(a);
+		solution B(b); // -> B.x = b;
+		solution C(B.x - fib_value(k - 1) / fib_value(k) * (B.x - A.x));
+		solution D(A.x + B.x - C.x);
 
-		return Xopt;
+		for (int i = 0; i <= (int)k - 3; i++) {
+			C.fit_fun(ff, ud1, ud2);
+			D.fit_fun(ff, ud1, ud2);
+			if (C.y < D.y) {
+				B.x = D.x;
+			}
+			else {
+				A.x = C.x;
+			}
+			C.x = B.x - fib_value(k - i - 2) / fib_value(k - i - 1) * (B.x - A.x);
+			D.x = A.x + B.x - C.x;
+		}
+		return C;
 	}
 	catch (string ex_info)
 	{
